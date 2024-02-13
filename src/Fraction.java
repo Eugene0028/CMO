@@ -1,14 +1,14 @@
 import java.util.Objects;
 
 public class Fraction {
-    private int numerator;
-    private int denominator;
+    private long numerator;
+    private long denominator;
 
-    public Fraction(int numerator, int denominator) {
+    public Fraction(long numerator, long denominator) {
         if (denominator == 0) {
             throw new ArithmeticException("Fraction(" + numerator + ", 0)");
         }
-        int gcd = gcd(numerator, denominator);
+        long gcd = gcd(numerator, denominator);
         if (denominator < 0) {
             gcd = -gcd;
         }
@@ -16,7 +16,7 @@ public class Fraction {
         this.denominator = denominator / gcd;
     }
 
-    public Fraction(int i)
+    public Fraction(long i)
     {
         this.numerator = 0;
         this.denominator = 1;
@@ -126,11 +126,11 @@ public class Fraction {
         this.denominator = denominator;
     }
 
-    public int getNumerator() {
+    public long getNumerator() {
         return numerator;
     }
 
-    public int getDenominator() {
+    public long getDenominator() {
         return denominator;
     }
 
@@ -151,7 +151,7 @@ public class Fraction {
         return Objects.hash(numerator, denominator);
     }
 
-    private int gcd(int a, int b) {
+    private long gcd(long a, long b) {
         if (b == 0) {
             return Math.abs(a);
         }

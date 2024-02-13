@@ -5,9 +5,9 @@ import java.util.List;
 
 public class JordanGauss {
 
-    public static void printMatrix(ArrayList<ArrayList<Fraction>> matrix)
+    public static void printMatrix(List<List<Fraction>> matrix)
     {
-        for (ArrayList<Fraction> row : matrix) {
+        for (List<Fraction> row : matrix) {
             for (Fraction element : row) {
                 System.out.printf("%15s", element.toString());
             }
@@ -16,7 +16,8 @@ public class JordanGauss {
         System.out.println();
     }
 
-    public static void jordanGaussMethod(ArrayList<ArrayList<Fraction>> matrix) {
+    public static void jordanGaussMethod(List<List<Fraction>> matrix)
+    {
         for (int c = 0; c < matrix.size(); c++) {
             int index = c;
             for (int i = c + 1; i < matrix.size(); i++) {
@@ -26,7 +27,7 @@ public class JordanGauss {
             }
 
             if (index != c) {
-                ArrayList<Fraction> temp = matrix.get(index);
+                List<Fraction> temp = matrix.get(index);
                 matrix.set(index, matrix.get(c));
                 matrix.set(c, temp);
                 System.out.println("СВАП НА МАКСИМАЛЬНЫЙ");
@@ -36,7 +37,7 @@ public class JordanGauss {
             if (matrix.get(c).get(c).getNumerator() == 0) continue;
 
             if (matrix.get(c).get(c).getNumerator() != matrix.get(c).get(c).getDenominator()) {
-                ArrayList<Fraction> row = matrix.get(c);
+                List<Fraction> row = matrix.get(c);
                 ArrayList<Fraction> normalizedRow = new ArrayList<>();
                 for (Fraction element : row) {
                     normalizedRow.add(element.divide(matrix.get(c).get(c)));
@@ -61,7 +62,8 @@ public class JordanGauss {
         }
 
         int noNullStr = 0;
-        for (ArrayList<Fraction> row : matrix) {
+        for (List<Fraction> row : matrix)
+        {
             boolean flag = true;
             for (int j = 0; j < row.size() - 1; j++) {
                 if (row.get(j).getNumerator() != 0) {
@@ -78,40 +80,107 @@ public class JordanGauss {
             noNullStr++;
         }
 
+
         System.out.println("Ответ:");
         if (noNullStr == 0) {
             System.out.println("нет решения");
         } else if (noNullStr == matrix.size() && noNullStr == matrix.getFirst().size() - 1) {
             List<String> tmp = new ArrayList<>();
             for (int i = 0; i < matrix.size(); i++) {
-                tmp.add("x" + (i + 1) + " = " + matrix.get(i).get(matrix.getFirst().size() - 1));
+                tmp.add("x" + (i + 1) + " = " + matrix.get(i).get(matrix.getFirst().size()-1));
             }
-            System.out.println(tmp);
-        } else {
+            System.out.println(String.join("\n", tmp));
+        }
+        else {
             List<String> tmp = new ArrayList<>();
             for (int i = 0; i < matrix.size(); i++) {
-                StringBuilder strBuilder = new StringBuilder();
+                String str_tmp = "";
                 if (matrix.get(i).get(i).getNumerator() == matrix.get(i).get(i).getDenominator()) {
-                    strBuilder.append("x").append(i + 1).append(" = ").append(matrix.get(i).get(matrix.getFirst().size() - 1));
+                    str_tmp += "x" + (i + 1) + " = " + matrix.get(i).getLast(); //matrix[i][matrix[i].length - 1];
                     for (int j = 0; j < matrix.getFirst().size() - 1; j++) {
                         if (j == i) {
                             continue;
                         }
+                        if (matrix.get(i).get(j).getNumerator() == 0)
+                        {
+                            continue;
+                        }
+                        str_tmp += " + ";
+                        str_tmp += "(" + matrix.get(i).get(j).multiply(new Fraction(-1, 1)) + ")" + "x" + (j + 1);
+                    }
+                } else {
+                    boolean flag = true;
+                    for (int j = 0; j < matrix.get(i).size() - 1; j++) {
                         if (matrix.get(i).get(j).getNumerator() != 0) {
-                            strBuilder.append(" + ").append("(").append(matrix.get(i).get(j).multiply(new Fraction(-1, 1))).append(")").append("x").append(j + 1);
+                            flag = false;
+                            break;
                         }
                     }
-                    tmp.add(strBuilder.toString());
+                    if (flag && matrix.get(i).getLast().getNumerator() == 0) {
+                        continue;
+                    }
+                    for (int j = 0; j < matrix.getFirst().size() - 1; j++) {
+                        if (matrix.get(i).get(j).getNumerator() == 0) {
+                            continue;
+                        }
+                        str_tmp += "x" + (j + 1);
+                    }
+                    str_tmp += " = " + matrix.get(i).getLast();
+                }
+                if (!str_tmp.equals("")) {
+                    tmp.add(str_tmp);
                 }
             }
-            tmp.forEach(System.out::println);
+            System.out.println(String.join("\n", tmp));
         }
+
+//        System.out.println("Ответ:");
+//        if (noNullStr == 0)
+//        {
+//            System.out.println("нет решения");
+//        } else if (noNullStr == matrix.size() && noNullStr == matrix.getFirst().size() - 1) {
+//            List<String> tmp = new ArrayList<>();
+//            for (int i = 0; i < matrix.size(); i++) {
+//                tmp.add("x" + (i + 1) + " = " + matrix.get(i).get(matrix.getFirst().size() - 1));
+//            }
+//            System.out.println(tmp);
+//        }
+//        else {
+//            List<String> tmp = new ArrayList<>();
+//            for (int i = 0; i < matrix.size(); i++) {
+//                StringBuilder strBuilder = new StringBuilder();
+//                if (matrix.get(i).get(i).getNumerator() == matrix.get(i).get(i).getDenominator()) {
+//                    strBuilder.append("x").append(i + 1).append(" = ").append(matrix.get(i).get(matrix.getFirst().size() - 1));
+//                    for (int j = 0; j < matrix.getFirst().size() - 1; j++) {
+//                        if (j == i) {
+//                            continue;
+//                        }
+//                        if (matrix.get(i).get(j).getNumerator() != 0) {
+//                            strBuilder.append(" + ").append("(").append(matrix.get(i).get(j).multiply(new Fraction(-1, 1))).append(")").append("x").append(j + 1);
+//                        }
+//                    }
+//                    tmp.add(strBuilder.toString());
+//                }
+//            }
+//            tmp.forEach(System.out::println);
+//        }
     }
 
-    public static void main(String[] args) {
+    private static boolean check (List<List<Fraction>> list){
+        int cnt = 0;
+        for(var i : list) for (var j : i) if (j.getNumerator() != 0)cnt++;
+
+        return cnt == 0;
+    }
+
+    public static void main(String[] args)
+    {
         Reader reader = new Reader(new File("res/input.txt"));
-        ArrayList<ArrayList<Fraction>> matrix = reader.readMatrixFromFile();
+        List<List<Fraction>> matrix = reader.readMatrixFromFile();
         printMatrix(matrix);
-        jordanGaussMethod(matrix);
+        if (check(matrix)){
+            System.out.println("бесконечное кол-во решений");
+        }
+        else jordanGaussMethod(matrix);
     }
 }
